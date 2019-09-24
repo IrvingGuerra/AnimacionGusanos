@@ -37,7 +37,7 @@ int main(int argc, char const *argv[]){
 		int randomX = rand() % 800 + 1;
 		int randomy = rand() % 600 + 1;
 */
-		int randomX = 100;
+		int randomX = 100; 
 		int randomy = 100;
 		int tamano = 10;
 

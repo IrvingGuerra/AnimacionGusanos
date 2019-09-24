@@ -4,7 +4,7 @@
 #include <iostream>
 using namespace std;
 
-//Gusano::Gusano(int x, int y, int tam) : inicialX(x), inicialY(y), tamano(tam){}
+Gusano::Gusano(int x, int y, int tam) : inicialX(x), inicialY(y), tamano(tam){}
 
 void Gusano::inicializaGusano(int x, int y, int tam){
 	inicialX = x; //100

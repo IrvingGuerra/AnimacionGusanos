@@ -11,7 +11,7 @@ private:
 	int saveX2[10];
 	int saveY2[10];
 public:
-	//Gusano(int = 100, int = 100, int = 10);
+	Gusano(int = 100, int = 100, int = 10);
 	void inicializaGusano(int, int, int);
 	void imprimeGusano();
 };
