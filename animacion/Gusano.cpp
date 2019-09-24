@@ -4,14 +4,14 @@
 #include <iostream>
 using namespace std;
 
-Gusano::Gusano(int x, int y, int tam) : inicialX(x), inicialY(y), tamaño(tam){}
+//Gusano::Gusano(int x, int y, int tam) : inicialX(x), inicialY(y), tamano(tam){}
 
 void Gusano::inicializaGusano(int x, int y, int tam){
 	inicialX = x; //100
 	inicialY = y; //100
-	tamaño 	 = tam; //10
+	tamano 	 = tam; //10
 
-/*
+
 	//Creamos pixel a pixel el gusano
 
 	//Definimos la direccion aleatoriamente ==>  | = 1    / = 2      __ = 3
@@ -20,7 +20,7 @@ void Gusano::inicializaGusano(int x, int y, int tam){
 
 	switch(direccion){
 		case 1:
-			for (int i = 0; i < tamaño; ++i){
+			for (int i = 0; i < tamano; ++i){
 				saveX1[i] = inicialX;
 				saveY1[i] = inicialY+i;
 				saveX2[i] = inicialX;
@@ -32,18 +32,14 @@ void Gusano::inicializaGusano(int x, int y, int tam){
 		case 3:
 		break;
 	}
-*/
 
 	return;
 }
 
 
 void Gusano::imprimeGusano(){
-	/*
-	for (int i = 0; i < tamaño; ++i){
-		gfx_line(1,1,1,1);
+	for (int i = 0; i < tamano; ++i){
+		gfx_line(saveX1[i],saveY1[i],saveX2[i],saveY2[i]);
 	}
-	*/
 	return;
 }
-

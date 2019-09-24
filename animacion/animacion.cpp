@@ -1,11 +1,12 @@
 #include "gfx.h"
 #include "Gusano.h"
 
-#include <iostream>
+
 #include <unistd.h>
 #include <time.h>
 #include <stdlib.h>
 
+#include <iostream>
 using namespace std;
 
 int main(int argc, char const *argv[]){
@@ -38,11 +39,11 @@ int main(int argc, char const *argv[]){
 */
 		int randomX = 100;
 		int randomy = 100;
-		int tamaño = 10;
+		int tamano = 10;
 
 		Gusano a;
-		a.inicializaGusano(randomX,randomy,tamaño);
-		//a.imprimeGusano();
+		a.inicializaGusano(randomX,randomy,tamano);
+		a.imprimeGusano();
 
 
 	
