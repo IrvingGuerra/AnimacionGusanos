@@ -31,28 +31,10 @@ int main(int argc, char const *argv[]){
 		printf("Debe de ingresar un numero mayor a 0");
 	}else{
 		
-		gfx_open(WindowsX, WindowsY, "Gusanos Animados");		//Creamos la ventana
-		gfx_clear_color(255,255,255); 				//Ponemos un fondo blanco
+		gfx_open(WindowsX, WindowsY, "Gusanos Animados");
+		gfx_clear_color(255,255,255); //Ponemos un fondo blanco
 		gfx_clear();
-		gfx_color(0,0,0); 							//Color Negro por default
-
-		/*
-		float randomX = 500;
-		float randomY = 500;
-		int	tamano = 20;
-		int	sentido = 2;
-		int	direccion = 8;
-		int	tipoMovimiento = 2; // = rand() % 3 + 1; //Recto, serpenteo
-
-		Gusano a;
-		a.inicializaGusano(sentido,randomX,randomY,tamano);
-		while(1){
-			gfx_clear();
-			a.mueveGusano(direccion,tipoMovimiento);
-			gfx_flush();
-		}
-		*/
-
+		gfx_color(0,0,0); //Color Negro por default
 
 		//Hacemos un array de Hilos
 		int cantidad = atoi(argv[1]);

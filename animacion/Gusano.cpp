@@ -1,107 +1,77 @@
 #include "gfx.h"
 #include "Gusano.h"
-
 #include <unistd.h>
 #include <iostream>
 using namespace std;
-
 const int TIEMPO = 3000;
-
-Gusano::Gusano(int s,float x, float y, int tam) : sentido(s),inicialX(x), inicialY(y), tamano(tam){}
-
+Gusano::Gusano(int s, int tam) : sentido(s), tamano(tam){}
 void Gusano::inicializaGusano(int s,float x, float y, int tam){
-	inicialX = x; //100
-	inicialY = y; //100
-	tamano 	 = tam; //10
+	tamano 	= tam; 
 	sentido = s;
 	//Creamos pixel a pixel el gusano
-	//Sentido
-	//1 = Norte, 2 = Noroeste, 3 = Este, 4 = Sureste, 5 = Sur, 6 = Suroeste, 7 = Oeste, 8 = Noroeste
 	switch(sentido){
 		case 1: case 5: //Norte y Sur. = |
 			for (int i = 0; i < tamano; ++i){
-				saveX1[i] = inicialX;
-				saveX2[i] = inicialX;
-				saveY1[i] = inicialY+i;
-				saveY2[i] = inicialY+i;
+				saveX[i] = x;
+				saveY[i] = y+i;
 			}
 		break;
 		case 2: case 4: //Noroeste y Sureste. = \.  
 			for (int i = 0; i < tamano; ++i){
-				saveX1[i] = inicialX-i;
-				saveX2[i] = inicialX-i;
-				saveY1[i] = inicialY-i;
-				saveY2[i] = inicialY-i;
+				saveX[i] = x-i;
+				saveY[i] = y-i;
 			}
 		break;
 		case 3: //Este = __
 			for (int i = 0; i < tamano; ++i){
-				saveX1[i] = inicialX-i;
-				saveX2[i] = inicialX-i;
-				saveY1[i] = inicialY;
-				saveY2[i] = inicialY;
+				saveX[i] = x-i;
+				saveY[i] = y;
 			}
 		break;
 		case 7: //Oeste = __
 			for (int i = 0; i < tamano; ++i){
-				saveX1[i] = inicialX+i;
-				saveX2[i] = inicialX+i;
-				saveY1[i] = inicialY;
-				saveY2[i] = inicialY;
+				saveX[i] = x+i;
+				saveY[i] = y;
 			}
 		break;
 		case 6: case 8: //Suroeste y Noreste = /
 			for (int i = 0; i < tamano; ++i){
-				saveX1[i] = inicialX-i;
-				saveX2[i] = inicialX-i;
-				saveY1[i] = inicialY+i;
-				saveY2[i] = inicialY+i;
+				saveX[i] = x-i;
+				saveY[i] = y+i;
 			}
 		break;
 	}
-
 	return;
 }
 void Gusano::imprimeGusanoColor(){
 	gfx_color(0,0,0); //Color negro
 	for (int i = 0; i < tamano; ++i){
-		gfx_line(saveX1[i],saveY1[i],saveX2[i],saveY2[i]);
+		gfx_point(saveX[i],saveY[i]);
 	}
 	gfx_flush();
 	usleep(TIEMPO);
-
 	imprimeGusanoBlanco();
-
 	return;
 }
-
 void Gusano::imprimeGusanoBlanco(){
 	gfx_color(255,255,255);
 	for (int i = 0; i < tamano; ++i){
-		gfx_line(saveX1[i],saveY1[i],saveX2[i],saveY2[i]);
+		gfx_point(saveX[i],saveY[i]);
 	}
 	gfx_flush();
 	return;
 }
-
-//Vueltas a la derecha
 void Gusano::NtoNE(){
 	for (int h = 1; h < 5; ++h){
 		for (int j = 0; j < 5; ++j){
 			for (int i = (tamano-1); i > 0; --i){
-				saveX1[i] = saveX1[i-1];
-				saveY1[i] = saveY1[i-1];
-				saveX2[i] = saveX2[i-1];
-				saveY2[i] = saveY2[i-1];  
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
 			}
 			float decimal = (float)h/10;
-			saveX1[0] = saveX1[0]+decimal;
-			saveX2[0] = saveX2[0]+decimal;
-			saveY1[0] = saveY1[0]-1+decimal;
-			saveY2[0] = saveY1[0]-1+decimal;
-			imprimeGusanoColor();			
-	 		//imprimeGusanoBlanco();
-	 		
+			saveX[0] = saveX[0]+decimal;
+			saveY[0] = saveY[0]-1+decimal;
+			imprimeGusanoColor();					
 		}	
 	}
 }
@@ -109,18 +79,13 @@ void Gusano::NEtoE(){
 	for (int h = 5; h < 10; ++h){
 		for (int j = 0; j < 5; ++j){
 			for (int i = (tamano-1); i > 0; --i){
-				saveX1[i] = saveX1[i-1];
-				saveY1[i] = saveY1[i-1];
-				saveX2[i] = saveX2[i-1];
-				saveY2[i] = saveY2[i-1];  
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
 			}
 			float decimal = (float)h/10;
-			saveX1[0] = saveX1[0]+decimal;
-			saveX2[0] = saveX2[0]+decimal;
-			saveY1[0] = saveY1[0]-1+decimal;
-			saveY2[0] = saveY1[0]-1+decimal;
+			saveX[0] = saveX[0]+decimal;
+			saveY[0] = saveY[0]-1+decimal;
 			imprimeGusanoColor();			
-	 		//imprimeGusanoBlanco();
 		}	
 	}
 }
@@ -128,20 +93,13 @@ void Gusano::EtoSE(){
 	for (int h = 1; h < 5; ++h){
 		for (int j = 0; j < 5; ++j){
 			for (int i = (tamano-1); i > 0; --i){
-				saveX1[i] = saveX1[i-1];
-				saveY1[i] = saveY1[i-1];
-				saveX2[i] = saveX2[i-1];
-				saveY2[i] = saveY2[i-1];  
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];	
 			}
 			float decimal = (float)h/10;
-
-			saveX1[0] = saveX1[0]+1-decimal;
-			saveX2[0] = saveX2[0]+1-decimal;
-			saveY1[0] = saveY1[0]+decimal;
-			saveY2[0] = saveY1[0]+decimal;
-			imprimeGusanoColor();			
-	 		//imprimeGusanoBlanco();
-	 		
+			saveX[0] = saveX[0]+1-decimal;
+			saveY[0] = saveY[0]+decimal;
+			imprimeGusanoColor();				
 		}	
 	}
 }
@@ -149,20 +107,13 @@ void Gusano::SEtoS(){
 	for (int h = 5; h < 10; ++h){
 		for (int j = 0; j < 5; ++j){
 			for (int i = (tamano-1); i > 0; --i){
-				saveX1[i] = saveX1[i-1];
-				saveY1[i] = saveY1[i-1];
-				saveX2[i] = saveX2[i-1];
-				saveY2[i] = saveY2[i-1];  
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
 			}
 			float decimal = (float)h/10;
-
-			saveX1[0] = saveX1[0]+1-decimal;
-			saveX2[0] = saveX2[0]+1-decimal;
-			saveY1[0] = saveY1[0]+decimal;
-			saveY2[0] = saveY1[0]+decimal;
+			saveX[0] = saveX[0]+1-decimal;
+			saveY[0] = saveY[0]+decimal;
 			imprimeGusanoColor();			
-	 		//imprimeGusanoBlanco();
-	 		
 		}	
 	}
 }
@@ -170,19 +121,13 @@ void Gusano::StoSO(){
 	for (int h = 1; h < 5; ++h){
 		for (int j = 0; j < 5; ++j){
 			for (int i = (tamano-1); i > 0; --i){
-				saveX1[i] = saveX1[i-1];
-				saveY1[i] = saveY1[i-1];
-				saveX2[i] = saveX2[i-1];
-				saveY2[i] = saveY2[i-1];  
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
 			}
 			float decimal = (float)h/10;
-			saveX1[0] = saveX1[0]-decimal;
-			saveX2[0] = saveX2[0]-decimal;
-			saveY1[0] = saveY1[0]+1-decimal;
-			saveY2[0] = saveY1[0]+1-decimal;
+			saveX[0] = saveX[0]-decimal;
+			saveY[0] = saveY[0]+1-decimal;
 			imprimeGusanoColor();			
-	 		//imprimeGusanoBlanco();
-	 		
 		}	
 	}
 }
@@ -190,19 +135,13 @@ void Gusano::SOtoO(){
 	for (int h = 5; h < 10; ++h){
 		for (int j = 0; j < 5; ++j){
 			for (int i = (tamano-1); i > 0; --i){
-				saveX1[i] = saveX1[i-1];
-				saveY1[i] = saveY1[i-1];
-				saveX2[i] = saveX2[i-1];
-				saveY2[i] = saveY2[i-1];  
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
 			}
 			float decimal = (float)h/10;
-			saveX1[0] = saveX1[0]-decimal;
-			saveX2[0] = saveX2[0]-decimal;
-			saveY1[0] = saveY1[0]+1-decimal;
-			saveY2[0] = saveY1[0]+1-decimal;
+			saveX[0] = saveX[0]-decimal;
+			saveY[0] = saveY[0]+1-decimal;
 			imprimeGusanoColor();			
-	 		//imprimeGusanoBlanco();
-	 		
 		}	
 	}
 }
@@ -210,19 +149,13 @@ void Gusano::OtoNO(){
 	for (int h = 1; h < 5; ++h){
 		for (int j = 0; j < 5; ++j){
 			for (int i = (tamano-1); i > 0; --i){
-				saveX1[i] = saveX1[i-1];
-				saveY1[i] = saveY1[i-1];
-				saveX2[i] = saveX2[i-1];
-				saveY2[i] = saveY2[i-1];  
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
 			}
 			float decimal = (float)h/10;
-			saveX1[0] = saveX1[0]-1+decimal;
-			saveX2[0] = saveX2[0]-1+decimal;
-			saveY1[0] = saveY1[0]-decimal;
-			saveY2[0] = saveY1[0]-decimal;
+			saveX[0] = saveX[0]-1+decimal;
+			saveY[0] = saveY[0]-decimal;
 			imprimeGusanoColor();			
-	 		//imprimeGusanoBlanco();
-	 		
 		}	
 	}
 }
@@ -230,156 +163,102 @@ void Gusano::NOtoN(){
 	for (int h = 5; h < 10; ++h){
 		for (int j = 0; j < 5; ++j){
 			for (int i = (tamano-1); i > 0; --i){
-				saveX1[i] = saveX1[i-1];
-				saveY1[i] = saveY1[i-1];
-				saveX2[i] = saveX2[i-1];
-				saveY2[i] = saveY2[i-1];  
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
 			}
 			float decimal = (float)h/10;
-			saveX1[0] = saveX1[0]-1+decimal;
-			saveX2[0] = saveX2[0]-1+decimal;
-			saveY1[0] = saveY1[0]-decimal;
-			saveY2[0] = saveY1[0]-decimal;
+			saveX[0] = saveX[0]-1+decimal;
+			saveY[0] = saveY[0]-decimal;
 			imprimeGusanoColor();			
-	 		//imprimeGusanoBlanco();
-	 		
 		}	
 	}
 }
-//Rectas
 void Gusano::straightN(){
 	for(int j = 0; j < 50; j++){
 		for (int i = (tamano-1); i > 0; --i){
-			saveX1[i] = saveX1[i-1];
-			saveY1[i] = saveY1[i-1];
-			saveX2[i] = saveX2[i-1];
-			saveY2[i] = saveY2[i-1];  
+			saveX[i] = saveX[i-1];
+			saveY[i] = saveY[i-1];
 		}
-		saveY1[0]--;
-		saveY2[0]--;
-		imprimeGusanoColor();	
- 		//imprimeGusanoBlanco();
- 		 //24 por segundo
+		saveY[0]--;
+		imprimeGusanoColor();
 	}
 }
 void Gusano::straightNE(){
 	for(int j = 0; j < 50; j++){
 		for (int i = (tamano-1); i > 0; --i){
-			saveX1[i] = saveX1[i-1];
-			saveY1[i] = saveY1[i-1];
-			saveX2[i] = saveX2[i-1];
-			saveY2[i] = saveY2[i-1];  
+			saveX[i] = saveX[i-1];
+			saveY[i] = saveY[i-1];
 		}
-		saveX1[0]++;
-		saveX2[0]++;
-		saveY1[0]--;
-		saveY2[0]--;
-		imprimeGusanoColor();	
- 		//imprimeGusanoBlanco();
- 		 //24 por segundo
+		saveX[0]++;
+		saveY[0]--;	
+		imprimeGusanoColor();
 	}
 }
 void Gusano::straightE(){
 	for(int j = 0; j < 50; j++){
 		for (int i = (tamano-1); i > 0; --i){
-			saveX1[i] = saveX1[i-1];
-			saveY1[i] = saveY1[i-1];
-			saveX2[i] = saveX2[i-1];
-			saveY2[i] = saveY2[i-1];  
+			saveX[i] = saveX[i-1];
+			saveY[i] = saveY[i-1];
 		}
-		saveX1[0]++;
-		saveX2[0]++;
-		imprimeGusanoColor();	
- 		//imprimeGusanoBlanco();
- 		 //24 por segundo
-		}
+		saveX[0]++;
+		imprimeGusanoColor();
+	}
 }
 void Gusano::straightSE(){
 	for(int j = 0; j < 50; j++){
 		for (int i = (tamano-1); i > 0; --i){
-			saveX1[i] = saveX1[i-1];
-			saveY1[i] = saveY1[i-1];
-			saveX2[i] = saveX2[i-1];
-			saveY2[i] = saveY2[i-1];  
+			saveX[i] = saveX[i-1];
+			saveY[i] = saveY[i-1];
 		}
-		saveX1[0]++;
-		saveX2[0]++;
-		saveY1[0]++;
-		saveY2[0]++;
-		imprimeGusanoColor();	
- 		//imprimeGusanoBlanco();
- 		 //24 por segundo
-		}
+		saveX[0]++;
+		saveY[0]++;
+		imprimeGusanoColor();
+	}
 }
 void Gusano::straightS(){
 	for(int j = 0; j < 50; j++){
 		for (int i = (tamano-1); i > 0; --i){
-			saveX1[i] = saveX1[i-1];
-			saveY1[i] = saveY1[i-1];
-			saveX2[i] = saveX2[i-1];
-			saveY2[i] = saveY2[i-1];  
+			saveX[i] = saveX[i-1];
+			saveY[i] = saveY[i-1];
 		}
-		saveY1[0]++;
-		saveY2[0]++;
-		imprimeGusanoColor();	
- 		//imprimeGusanoBlanco();
- 		 //24 por segundo
+		saveY[0]++;
+		imprimeGusanoColor();
 	}
 }
 void Gusano::straightSO(){
 	for(int j = 0; j < 50; j++){
 		for (int i = (tamano-1); i > 0; --i){
-			saveX1[i] = saveX1[i-1];
-			saveY1[i] = saveY1[i-1];
-			saveX2[i] = saveX2[i-1];
-			saveY2[i] = saveY2[i-1];  
+			saveX[i] = saveX[i-1];
+			saveY[i] = saveY[i-1];
 		}
-		saveX1[0]--;
-		saveX2[0]--;
-		saveY1[0]++;
-		saveY2[0]++;
-		imprimeGusanoColor();	
- 		//imprimeGusanoBlanco();
- 		 //24 por segundo
+		saveX[0]--;
+		saveY[0]++;
+		imprimeGusanoColor();
 	}
 }
 void Gusano::straightO(){
 	for(int j = 0; j < 50; j++){
 		for (int i = (tamano-1); i > 0; --i){
-			saveX1[i] = saveX1[i-1];
-			saveY1[i] = saveY1[i-1];
-			saveX2[i] = saveX2[i-1];
-			saveY2[i] = saveY2[i-1];  
+			saveX[i] = saveX[i-1];
+			saveY[i] = saveY[i-1];	
 		}
-		saveX1[0]--;
-		saveX2[0]--;
-		imprimeGusanoColor();	
- 		//imprimeGusanoBlanco();
- 		 //24 por segundo
+		saveX[0]--;
+		imprimeGusanoColor();
 	}
 }
 void Gusano::straightNO(){
 	for(int j = 0; j < 50; j++){
 		for (int i = (tamano-1); i > 0; --i){
-			saveX1[i] = saveX1[i-1];
-			saveY1[i] = saveY1[i-1];
-			saveX2[i] = saveX2[i-1];
-			saveY2[i] = saveY2[i-1];  
+			saveX[i] = saveX[i-1];
+			saveY[i] = saveY[i-1];
 		}
-		saveX1[0]--;
-		saveX2[0]--;
-		saveY1[0]--;
-		saveY2[0]--;
-		imprimeGusanoColor();	
- 		//imprimeGusanoBlanco();
- 		 //24 por segundo
+		saveX[0]--;
+		saveY[0]--;
+		imprimeGusanoColor();
 	}
 }
-
-
-//Serpenteo
-
 void Gusano::snakeN(){
+	/*NOTA. En los serpenteos se repiten mas veces para que duren como un Straight*/
 	NtoNE();
 	NEtoN();
 	NtoNO();
@@ -475,26 +354,17 @@ void Gusano::snakeNO(){
 	OtoNO();
 	NOtoO();
 }
-
-
-//Vueltas a la izquierda
 void Gusano::NtoNO(){
 	for (int h = 1; h < 5; ++h){
 		for (int j = 0; j < 5; ++j){
 			for (int i = (tamano-1); i > 0; --i){
-				saveX1[i] = saveX1[i-1];
-				saveY1[i] = saveY1[i-1];
-				saveX2[i] = saveX2[i-1];
-				saveY2[i] = saveY2[i-1];  
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
 			}
 			float decimal = (float)h/10;
-			saveX1[0] = saveX1[0]-decimal;
-			saveX2[0] = saveX2[0]-decimal;
-			saveY1[0] = saveY1[0]-1+decimal;
-			saveY2[0] = saveY1[0]-1+decimal;
+			saveX[0] = saveX[0]-decimal;
+			saveY[0] = saveY[0]-1+decimal;
 			imprimeGusanoColor();			
-	 		//imprimeGusanoBlanco();
-	 		
 		}	
 	}
 }
@@ -502,19 +372,13 @@ void Gusano::NOtoO(){
 	for (int h = 5; h < 10; ++h){
 		for (int j = 0; j < 5; ++j){
 			for (int i = (tamano-1); i > 0; --i){
-				saveX1[i] = saveX1[i-1];
-				saveY1[i] = saveY1[i-1];
-				saveX2[i] = saveX2[i-1];
-				saveY2[i] = saveY2[i-1];  
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
 			}
 			float decimal = (float)h/10;
-			saveX1[0] = saveX1[0]-decimal;
-			saveX2[0] = saveX2[0]-decimal;
-			saveY1[0] = saveY1[0]-1+decimal;
-			saveY2[0] = saveY1[0]-1+decimal;
+			saveX[0] = saveX[0]-decimal;
+			saveY[0] = saveY[0]-1+decimal;
 			imprimeGusanoColor();			
-	 		//imprimeGusanoBlanco();
-	 		
 		}	
 	}
 }
@@ -522,20 +386,13 @@ void Gusano::OtoSO(){
 	for (int h = 1; h < 5; ++h){
 		for (int j = 0; j < 5; ++j){
 			for (int i = (tamano-1); i > 0; --i){
-				saveX1[i] = saveX1[i-1];
-				saveY1[i] = saveY1[i-1];
-				saveX2[i] = saveX2[i-1];
-				saveY2[i] = saveY2[i-1];  
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
 			}
 			float decimal = (float)h/10;
-
-			saveX1[0] = saveX1[0]-1+decimal;
-			saveX2[0] = saveX2[0]-1+decimal;
-			saveY1[0] = saveY1[0]+decimal;
-			saveY2[0] = saveY1[0]+decimal;
+			saveX[0] = saveX[0]-1+decimal;
+			saveY[0] = saveY[0]+decimal;
 			imprimeGusanoColor();			
-	 		//imprimeGusanoBlanco();
-	 		
 		}	
 	}
 }
@@ -543,20 +400,13 @@ void Gusano::SOtoS(){
 	for (int h = 5; h < 10; ++h){
 		for (int j = 0; j < 5; ++j){
 			for (int i = (tamano-1); i > 0; --i){
-				saveX1[i] = saveX1[i-1];
-				saveY1[i] = saveY1[i-1];
-				saveX2[i] = saveX2[i-1];
-				saveY2[i] = saveY2[i-1];  
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
 			}
 			float decimal = (float)h/10;
-
-			saveX1[0] = saveX1[0]-1+decimal;
-			saveX2[0] = saveX2[0]-1+decimal;
-			saveY1[0] = saveY1[0]+decimal;
-			saveY2[0] = saveY1[0]+decimal;
+			saveX[0] = saveX[0]-1+decimal;
+			saveY[0] = saveY[0]+decimal;
 			imprimeGusanoColor();			
-	 		//imprimeGusanoBlanco();
-	 		
 		}	
 	}
 }
@@ -564,19 +414,13 @@ void Gusano::StoSE(){
 	for (int h = 1; h < 5; ++h){
 		for (int j = 0; j < 5; ++j){
 			for (int i = (tamano-1); i > 0; --i){
-				saveX1[i] = saveX1[i-1];
-				saveY1[i] = saveY1[i-1];
-				saveX2[i] = saveX2[i-1];
-				saveY2[i] = saveY2[i-1];  
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
 			}
 			float decimal = (float)h/10;
-			saveX1[0] = saveX1[0]+decimal;
-			saveX2[0] = saveX2[0]+decimal;
-			saveY1[0] = saveY1[0]+1-decimal;
-			saveY2[0] = saveY1[0]+1-decimal;
+			saveX[0] = saveX[0]+decimal;
+			saveY[0] = saveY[0]+1-decimal;
 			imprimeGusanoColor();			
-	 		//imprimeGusanoBlanco();
-	 		
 		}	
 	}
 }
@@ -584,19 +428,13 @@ void Gusano::SEtoE(){
 	for (int h = 5; h < 10; ++h){
 		for (int j = 0; j < 5; ++j){
 			for (int i = (tamano-1); i > 0; --i){
-				saveX1[i] = saveX1[i-1];
-				saveY1[i] = saveY1[i-1];
-				saveX2[i] = saveX2[i-1];
-				saveY2[i] = saveY2[i-1];  
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
 			}
 			float decimal = (float)h/10;
-			saveX1[0] = saveX1[0]+decimal;
-			saveX2[0] = saveX2[0]+decimal;
-			saveY1[0] = saveY1[0]+1-decimal;
-			saveY2[0] = saveY1[0]+1-decimal;
+			saveX[0] = saveX[0]+decimal;
+			saveY[0] = saveY[0]+1-decimal;
 			imprimeGusanoColor();			
-	 		//imprimeGusanoBlanco();
-	 		
 		}	
 	}
 }
@@ -604,19 +442,13 @@ void Gusano::EtoNE(){
 	for (int h = 1; h < 5; ++h){
 		for (int j = 0; j < 5; ++j){
 			for (int i = (tamano-1); i > 0; --i){
-				saveX1[i] = saveX1[i-1];
-				saveY1[i] = saveY1[i-1];
-				saveX2[i] = saveX2[i-1];
-				saveY2[i] = saveY2[i-1];  
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
 			}
 			float decimal = (float)h/10;
-			saveX1[0] = saveX1[0]+1-decimal;
-			saveX2[0] = saveX2[0]+1-decimal;
-			saveY1[0] = saveY1[0]-decimal;
-			saveY2[0] = saveY1[0]-decimal;
+			saveX[0] = saveX[0]+1-decimal;
+			saveY[0] = saveY[0]-decimal;
 			imprimeGusanoColor();			
-	 		//imprimeGusanoBlanco();
-	 		
 		}	
 	}
 }
@@ -624,24 +456,16 @@ void Gusano::NEtoN(){
 	for (int h = 5; h < 10; ++h){
 		for (int j = 0; j < 5; ++j){
 			for (int i = (tamano-1); i > 0; --i){
-				saveX1[i] = saveX1[i-1];
-				saveY1[i] = saveY1[i-1];
-				saveX2[i] = saveX2[i-1];
-				saveY2[i] = saveY2[i-1];  
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
 			}
 			float decimal = (float)h/10;
-			saveX1[0] = saveX1[0]+1-decimal;
-			saveX2[0] = saveX2[0]+1-decimal;
-			saveY1[0] = saveY1[0]-decimal;
-			saveY2[0] = saveY1[0]-decimal;
+			saveX[0] = saveX[0]+1-decimal;
+			saveY[0] = saveY[0]-decimal;
 			imprimeGusanoColor();			
-	 		//imprimeGusanoBlanco();
-	 		
 		}	
 	}
 }
-
-
 void Gusano::mueveGusano(int d, int tipo){
 	direccion = d;
 	switch(tipo){
