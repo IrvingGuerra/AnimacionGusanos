@@ -4,25 +4,24 @@
 
 #include <unistd.h>
 #include <time.h>
-#include <stdlib.h>
+#include <stdlib.h> 
+#include <thread> 
 
 #include <iostream>
 using namespace std;
 
+void gusanito(float x,float y, int tamano, int sentido, int direccion, int tipoMovimiento){
+	Gusano a;
+	a.inicializaGusano(sentido,x,y,tamano);
+
+	while(1){
+		int direccion = rand() % 8 + 1;
+		a.mueveGusano(direccion,tipoMovimiento);
+	}
+}
+
 int main(int argc, char const *argv[]){
-	/*
- int t;
- gfx_open(800, 600, "Ejemplo Micro Animacion GFX");
- gfx_color(0,200,100);
- for(t = 0; t < 100; t++){
- gfx_clear();
- gfx_line( t*1+80, t*2+40, t*2+40, t*3+80 );
- gfx_line(t*5+80, t*3+40, t*3+40, t*5+80);
- gfx_flush();
- usleep(41666); //24 por segundo
- }
- */
-	srand(time(NULL));
+		srand(time(NULL));
 
 	if (atoi(argv[1]) < 1 || argv[1] == NULL){
 		printf("Debe de ingresar un numero mayor a 0");
@@ -33,26 +32,38 @@ int main(int argc, char const *argv[]){
 		gfx_clear();
 		gfx_color(0,0,0); 							//Color Negro por default
 
-/*
-		int randomX = rand() % 800 + 1;
-		int randomy = rand() % 600 + 1;
-*/
-		int randomX = 100; 
-		int randomy = 100;
+
+
+		float randomX = rand() % 600 + 200;
+		float randomY = rand() % 400 + 200;
 		int tamano = 10;
+		int sentido = rand() % 8 + 1;
+		int direccion = rand() % 8 + 1;
+		int tipoMovimiento = 1; // = rand() % 3 + 1; //Recto, serpenteo
 
-		Gusano a;
-		a.inicializaGusano(randomX,randomy,tamano);
-		a.imprimeGusano();
+		thread th1(gusanito, randomX, randomY, tamano, sentido,direccion,tipoMovimiento);
 
+		randomX = rand() % 600 + 200;
+		randomY = rand() % 400 + 200;
+		tamano = 10;
+		sentido = rand() % 8 + 1;
+		direccion = rand() % 8 + 1;
+		tipoMovimiento = 1; // = rand() % 3 + 1; //Recto, serpenteo
+
+		thread th2(gusanito, randomX, randomY, tamano, sentido,direccion,tipoMovimiento);
+
+		th1.join();
+		th2.join();
 
 	
 		//Todo estara en un while infinito hasta presionar la letra q
+		/*
 		char c;
 		while(1) {
 			c = gfx_wait();
 			if(c=='q') break;
-		}
+		}*/
+		
 
 	}
 
