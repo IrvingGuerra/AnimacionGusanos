@@ -44,7 +44,10 @@ void Gusano::inicializaGusano(int s,float x, float y, int tam){
 	return;
 }
 void Gusano::imprimeGusanoColor(){
-	gfx_color(0,0,0); //Color negro
+	//gfx_color(0,0,0); //Color negro
+	//Color random!!! Menos blanco
+	gfx_color(rand() % 254 + 0,rand() % 254 + 0,rand() % 254 + 0);
+	
 	for (int i = 0; i < tamano; ++i){
 		gfx_point(saveX[i],saveY[i]);
 	}
