@@ -1,0 +1,1828 @@
+-------------------------------------------------------------------------------------------
+									Gusano.h
+
+/*
+	Developed By: Irving Guerra // https://github.com/IrvingGuerra
+
+	Archivo: Gusano.h
+
+	Descripción: En este archivo estan definidas y comentadas todas las 
+				 funciones que se usaran para animar a los gusanos.
+
+	Explicacion de variables mas representativas y bases del programa.
+
+	Nombre: Sentido
+	Descripcion: Sera el sentido a donde el gusano pretende moverse
+	Valores: 1,2,3,4,5,6,7,8
+	Valores: Norte, Noreste, Este, Suereste, Sur, Suroeste, Oeste y Noroeste respectivamente
+
+	Nombre: Direccion
+	Descripcion: Ya que se tiene el sentido del gusano, se movera a una direccion direfente. 
+	NOTA: El valor de la direccion posteriormente se convierte en el nuevo sentido del gusano.
+	Valores: 1,2,3,4,5,6,7,8
+	Valores: Norte, Noreste, Este, Suereste, Sur, Suroeste, Oeste y Noroeste respectivamente
+*/
+
+#ifndef GUSANO_H_
+#define GUSANO_H_
+
+class Gusano{
+private:
+	int 	sentido;
+	int 	direccion;
+	int 	tamano;
+	float 	saveX[20];
+	float 	saveY[20];
+public:
+	Gusano(int = 1, int = 20);
+	void inicializaGusano(int, float, float, int);
+	void imprimeGusanoColor();
+	void imprimeGusanoBlanco();
+	void mueveGusano(int,int);
+	/*
+		Tipo: Funciones
+		Descripción: De Norte hasta Norte, pasando primera vez por NorESTE
+		D2: Vuelta a la derecha
+		D3: Sentido a las manecillas del reloj
+	*/
+	void NtoNE(); //Norte to Noreste...
+	void NEtoE();
+	void EtoSE();
+	void SEtoS();
+	void StoSO();
+	void SOtoO();
+	void OtoNO();
+	void NOtoN(); //Noroeste to Norte...
+	/*
+		Tipo: Funciones
+		Descripción: De Norte hasta Norte, pasando primera vez por NorOESTE
+		D2: Vuelta a la izquierda
+		D3: Sentido contrario a las manecillas del reloj
+	*/
+	void NtoNO();
+	void NOtoO();
+	void OtoSO();
+	void SOtoS();
+	void StoSE();
+	void SEtoE();
+	void EtoNE();
+	void NEtoN();
+	/*
+		Tipo: Funciones
+		Descripción: El gusano ira en linea recta.
+	*/
+	void straightN(); //recto Norte
+	void straightNE();
+	void straightE();
+	void straightSE();
+	void straightS();
+	void straightSO();
+	void straightO();
+	void straightNO();
+	/*
+		Tipo: Funciones
+		Descripción: El gusano ira en linea con serpenteo.
+	*/
+	void snakeN(); //serpenteo Norte
+	void snakeNE();
+	void snakeE();
+	void snakeSE();
+	void snakeS();
+	void snakeSO();
+	void snakeO();
+	void snakeNO();
+};
+#endif
+
+-------------------------------------------------------------------------------------------
+									Gusano.cpp
+
+#include "gfx.h"
+#include "Gusano.h"
+#include <unistd.h>
+#include <iostream>
+using namespace std;
+const int TIEMPO = 3000;
+Gusano::Gusano(int s, int tam) : sentido(s), tamano(tam){}
+void Gusano::inicializaGusano(int s,float x, float y, int tam){
+	tamano 	= tam; 
+	sentido = s;
+	//Creamos pixel a pixel el gusano
+	switch(sentido){
+		case 1: case 5: //Norte y Sur. = |
+			for (int i = 0; i < tamano; ++i){
+				saveX[i] = x;
+				saveY[i] = y+i;
+			}
+		break;
+		case 2: case 4: //Noroeste y Sureste. = \.  
+			for (int i = 0; i < tamano; ++i){
+				saveX[i] = x-i;
+				saveY[i] = y-i;
+			}
+		break;
+		case 3: //Este = __
+			for (int i = 0; i < tamano; ++i){
+				saveX[i] = x-i;
+				saveY[i] = y;
+			}
+		break;
+		case 7: //Oeste = __
+			for (int i = 0; i < tamano; ++i){
+				saveX[i] = x+i;
+				saveY[i] = y;
+			}
+		break;
+		case 6: case 8: //Suroeste y Noreste = /
+			for (int i = 0; i < tamano; ++i){
+				saveX[i] = x-i;
+				saveY[i] = y+i;
+			}
+		break;
+	}
+	return;
+}
+void Gusano::imprimeGusanoColor(){
+	//gfx_color(0,0,0); //Color negro
+	//Color random!!! Menos blanco
+	gfx_color(rand() % 254 + 0,rand() % 254 + 0,rand() % 254 + 0);
+	
+	for (int i = 0; i < tamano; ++i){
+		gfx_point(saveX[i],saveY[i]);
+	}
+	gfx_flush();
+	usleep(TIEMPO);
+	imprimeGusanoBlanco();
+	return;
+}
+void Gusano::imprimeGusanoBlanco(){
+	gfx_color(255,255,255);
+	for (int i = 0; i < tamano; ++i){
+		gfx_point(saveX[i],saveY[i]);
+	}
+	gfx_flush();
+	return;
+}
+void Gusano::NtoNE(){
+	for (int h = 1; h < 5; ++h){
+		for (int j = 0; j < 5; ++j){
+			for (int i = (tamano-1); i > 0; --i){
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
+			}
+			float decimal = (float)h/10;
+			saveX[0] = saveX[0]+decimal;
+			saveY[0] = saveY[0]-1+decimal;
+			imprimeGusanoColor();					
+		}	
+	}
+}
+void Gusano::NEtoE(){
+	for (int h = 5; h < 10; ++h){
+		for (int j = 0; j < 5; ++j){
+			for (int i = (tamano-1); i > 0; --i){
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
+			}
+			float decimal = (float)h/10;
+			saveX[0] = saveX[0]+decimal;
+			saveY[0] = saveY[0]-1+decimal;
+			imprimeGusanoColor();			
+		}	
+	}
+}
+void Gusano::EtoSE(){
+	for (int h = 1; h < 5; ++h){
+		for (int j = 0; j < 5; ++j){
+			for (int i = (tamano-1); i > 0; --i){
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];	
+			}
+			float decimal = (float)h/10;
+			saveX[0] = saveX[0]+1-decimal;
+			saveY[0] = saveY[0]+decimal;
+			imprimeGusanoColor();				
+		}	
+	}
+}
+void Gusano::SEtoS(){
+	for (int h = 5; h < 10; ++h){
+		for (int j = 0; j < 5; ++j){
+			for (int i = (tamano-1); i > 0; --i){
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
+			}
+			float decimal = (float)h/10;
+			saveX[0] = saveX[0]+1-decimal;
+			saveY[0] = saveY[0]+decimal;
+			imprimeGusanoColor();			
+		}	
+	}
+}
+void Gusano::StoSO(){
+	for (int h = 1; h < 5; ++h){
+		for (int j = 0; j < 5; ++j){
+			for (int i = (tamano-1); i > 0; --i){
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
+			}
+			float decimal = (float)h/10;
+			saveX[0] = saveX[0]-decimal;
+			saveY[0] = saveY[0]+1-decimal;
+			imprimeGusanoColor();			
+		}	
+	}
+}
+void Gusano::SOtoO(){
+	for (int h = 5; h < 10; ++h){
+		for (int j = 0; j < 5; ++j){
+			for (int i = (tamano-1); i > 0; --i){
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
+			}
+			float decimal = (float)h/10;
+			saveX[0] = saveX[0]-decimal;
+			saveY[0] = saveY[0]+1-decimal;
+			imprimeGusanoColor();			
+		}	
+	}
+}
+void Gusano::OtoNO(){
+	for (int h = 1; h < 5; ++h){
+		for (int j = 0; j < 5; ++j){
+			for (int i = (tamano-1); i > 0; --i){
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
+			}
+			float decimal = (float)h/10;
+			saveX[0] = saveX[0]-1+decimal;
+			saveY[0] = saveY[0]-decimal;
+			imprimeGusanoColor();			
+		}	
+	}
+}
+void Gusano::NOtoN(){
+	for (int h = 5; h < 10; ++h){
+		for (int j = 0; j < 5; ++j){
+			for (int i = (tamano-1); i > 0; --i){
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
+			}
+			float decimal = (float)h/10;
+			saveX[0] = saveX[0]-1+decimal;
+			saveY[0] = saveY[0]-decimal;
+			imprimeGusanoColor();			
+		}	
+	}
+}
+void Gusano::straightN(){
+	for(int j = 0; j < 50; j++){
+		for (int i = (tamano-1); i > 0; --i){
+			saveX[i] = saveX[i-1];
+			saveY[i] = saveY[i-1];
+		}
+		saveY[0]--;
+		imprimeGusanoColor();
+	}
+}
+void Gusano::straightNE(){
+	for(int j = 0; j < 50; j++){
+		for (int i = (tamano-1); i > 0; --i){
+			saveX[i] = saveX[i-1];
+			saveY[i] = saveY[i-1];
+		}
+		saveX[0]++;
+		saveY[0]--;	
+		imprimeGusanoColor();
+	}
+}
+void Gusano::straightE(){
+	for(int j = 0; j < 50; j++){
+		for (int i = (tamano-1); i > 0; --i){
+			saveX[i] = saveX[i-1];
+			saveY[i] = saveY[i-1];
+		}
+		saveX[0]++;
+		imprimeGusanoColor();
+	}
+}
+void Gusano::straightSE(){
+	for(int j = 0; j < 50; j++){
+		for (int i = (tamano-1); i > 0; --i){
+			saveX[i] = saveX[i-1];
+			saveY[i] = saveY[i-1];
+		}
+		saveX[0]++;
+		saveY[0]++;
+		imprimeGusanoColor();
+	}
+}
+void Gusano::straightS(){
+	for(int j = 0; j < 50; j++){
+		for (int i = (tamano-1); i > 0; --i){
+			saveX[i] = saveX[i-1];
+			saveY[i] = saveY[i-1];
+		}
+		saveY[0]++;
+		imprimeGusanoColor();
+	}
+}
+void Gusano::straightSO(){
+	for(int j = 0; j < 50; j++){
+		for (int i = (tamano-1); i > 0; --i){
+			saveX[i] = saveX[i-1];
+			saveY[i] = saveY[i-1];
+		}
+		saveX[0]--;
+		saveY[0]++;
+		imprimeGusanoColor();
+	}
+}
+void Gusano::straightO(){
+	for(int j = 0; j < 50; j++){
+		for (int i = (tamano-1); i > 0; --i){
+			saveX[i] = saveX[i-1];
+			saveY[i] = saveY[i-1];	
+		}
+		saveX[0]--;
+		imprimeGusanoColor();
+	}
+}
+void Gusano::straightNO(){
+	for(int j = 0; j < 50; j++){
+		for (int i = (tamano-1); i > 0; --i){
+			saveX[i] = saveX[i-1];
+			saveY[i] = saveY[i-1];
+		}
+		saveX[0]--;
+		saveY[0]--;
+		imprimeGusanoColor();
+	}
+}
+void Gusano::snakeN(){
+	/*NOTA. En los serpenteos se repiten mas veces para que duren como un Straight*/
+	NtoNE();
+	NEtoN();
+	NtoNO();
+	NOtoN();
+	NtoNE();
+	NEtoN();
+	NtoNO();
+	NOtoN();
+	NtoNE();
+	NEtoN();
+	NtoNO();
+	NOtoN();
+	NtoNE();
+	NEtoN();
+	NtoNO();
+	NOtoN();
+}
+void Gusano::snakeNE(){
+	NtoNE();
+	NEtoN();
+	NtoNE();
+	NEtoN();
+	NtoNE();
+	NEtoN();
+	NtoNE();
+	NEtoN();
+	NtoNE();
+	NEtoN();
+}
+void Gusano::snakeE(){
+	EtoSE();
+	SEtoE();
+	EtoNE();
+	NEtoE();
+	EtoSE();
+	SEtoE();
+	EtoNE();
+	NEtoE();
+}
+void Gusano::snakeSE(){
+	EtoSE();
+	SEtoE();
+	EtoSE();
+	SEtoE();
+	EtoSE();
+	SEtoE();
+	EtoSE();
+	SEtoE();
+	EtoSE();
+	SEtoE();
+}
+void Gusano::snakeS(){
+	StoSE();
+	SEtoS();
+	StoSO();
+	SOtoS();
+	StoSE();
+	SEtoS();
+	StoSO();
+	SOtoS();
+}
+void Gusano::snakeSO(){
+	StoSO();
+	SOtoS();
+	StoSO();
+	SOtoS();
+	StoSO();
+	SOtoS();
+	StoSO();
+	SOtoS();
+	StoSO();
+	SOtoS();
+}
+void Gusano::snakeO(){
+	OtoNO();
+	NOtoO();
+	OtoSO();
+	SOtoO();
+	OtoNO();
+	NOtoO();
+	OtoSO();
+	SOtoO();
+}
+void Gusano::snakeNO(){
+	OtoNO();
+	NOtoO();
+	OtoNO();
+	NOtoO();
+	OtoNO();
+	NOtoO();
+	OtoNO();
+	NOtoO();
+	OtoNO();
+	NOtoO();
+}
+void Gusano::NtoNO(){
+	for (int h = 1; h < 5; ++h){
+		for (int j = 0; j < 5; ++j){
+			for (int i = (tamano-1); i > 0; --i){
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
+			}
+			float decimal = (float)h/10;
+			saveX[0] = saveX[0]-decimal;
+			saveY[0] = saveY[0]-1+decimal;
+			imprimeGusanoColor();			
+		}	
+	}
+}
+void Gusano::NOtoO(){
+	for (int h = 5; h < 10; ++h){
+		for (int j = 0; j < 5; ++j){
+			for (int i = (tamano-1); i > 0; --i){
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
+			}
+			float decimal = (float)h/10;
+			saveX[0] = saveX[0]-decimal;
+			saveY[0] = saveY[0]-1+decimal;
+			imprimeGusanoColor();			
+		}	
+	}
+}
+void Gusano::OtoSO(){
+	for (int h = 1; h < 5; ++h){
+		for (int j = 0; j < 5; ++j){
+			for (int i = (tamano-1); i > 0; --i){
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
+			}
+			float decimal = (float)h/10;
+			saveX[0] = saveX[0]-1+decimal;
+			saveY[0] = saveY[0]+decimal;
+			imprimeGusanoColor();			
+		}	
+	}
+}
+void Gusano::SOtoS(){
+	for (int h = 5; h < 10; ++h){
+		for (int j = 0; j < 5; ++j){
+			for (int i = (tamano-1); i > 0; --i){
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
+			}
+			float decimal = (float)h/10;
+			saveX[0] = saveX[0]-1+decimal;
+			saveY[0] = saveY[0]+decimal;
+			imprimeGusanoColor();			
+		}	
+	}
+}
+void Gusano::StoSE(){
+	for (int h = 1; h < 5; ++h){
+		for (int j = 0; j < 5; ++j){
+			for (int i = (tamano-1); i > 0; --i){
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
+			}
+			float decimal = (float)h/10;
+			saveX[0] = saveX[0]+decimal;
+			saveY[0] = saveY[0]+1-decimal;
+			imprimeGusanoColor();			
+		}	
+	}
+}
+void Gusano::SEtoE(){
+	for (int h = 5; h < 10; ++h){
+		for (int j = 0; j < 5; ++j){
+			for (int i = (tamano-1); i > 0; --i){
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
+			}
+			float decimal = (float)h/10;
+			saveX[0] = saveX[0]+decimal;
+			saveY[0] = saveY[0]+1-decimal;
+			imprimeGusanoColor();			
+		}	
+	}
+}
+void Gusano::EtoNE(){
+	for (int h = 1; h < 5; ++h){
+		for (int j = 0; j < 5; ++j){
+			for (int i = (tamano-1); i > 0; --i){
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
+			}
+			float decimal = (float)h/10;
+			saveX[0] = saveX[0]+1-decimal;
+			saveY[0] = saveY[0]-decimal;
+			imprimeGusanoColor();			
+		}	
+	}
+}
+void Gusano::NEtoN(){
+	for (int h = 5; h < 10; ++h){
+		for (int j = 0; j < 5; ++j){
+			for (int i = (tamano-1); i > 0; --i){
+				saveX[i] = saveX[i-1];
+				saveY[i] = saveY[i-1];
+			}
+			float decimal = (float)h/10;
+			saveX[0] = saveX[0]+1-decimal;
+			saveY[0] = saveY[0]-decimal;
+			imprimeGusanoColor();			
+		}	
+	}
+}
+void Gusano::mueveGusano(int d, int tipo){
+	direccion = d;
+	switch(tipo){
+		case 1: //Linea recta
+			switch(sentido){
+				case 1: //Norte
+					switch(direccion){
+						case 1: //Norte
+							NtoNE();
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							StoSO();
+							SOtoO();
+							OtoNO();
+							NOtoN();
+							straightN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							NtoNE();
+							straightNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							NtoNE();
+							NEtoE();
+							straightE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							NtoNE();
+							NEtoE();
+							EtoSE();
+							straightSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							NtoNE();
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							straightS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							NtoNE();
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							StoSO();
+							straightSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							NtoNE();
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							StoSO();
+							SOtoO();
+							straightO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							NtoNE();
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							StoSO();
+							SOtoO();
+							OtoNO();
+							straightNO();
+							sentido = 2;
+						break;
+					}
+				break;
+				case 8: //Noreste
+					switch(direccion){
+						case 1: //Norte
+							NEtoN();
+							straightN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							straightNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							NEtoE();
+							straightE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							NEtoE();
+							EtoSE();
+							straightSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							straightS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							StoSO();
+							straightSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							StoSO();
+							SOtoO();
+							straightO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							StoSO();
+							SOtoO();
+							OtoNO();
+							straightNO();
+							sentido = 2;
+						break;
+					}
+				break;
+				case 3: //Este
+					switch(direccion){
+						case 1: //Norte
+							EtoNE();
+							NEtoN();
+							straightN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							EtoNE();
+							straightNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							straightE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							EtoSE();
+							straightSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							EtoSE();
+							SEtoS();
+							straightS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							EtoSE();
+							SEtoS();
+							StoSO();
+							straightSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							EtoSE();
+							SEtoS();
+							StoSO();
+							SOtoO();
+							straightO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							EtoSE();
+							SEtoS();
+							StoSO();
+							SOtoO();
+							OtoNO();
+							straightNO();
+							sentido = 2;
+						break;
+					}
+				break;
+				case 4: //Sureste
+					switch(direccion){
+						case 1: //Norte
+							SEtoE();
+							EtoNE();
+							NEtoN();
+							straightN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							SEtoE();
+							EtoNE();
+							straightNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							SEtoE();
+							straightE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							straightSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							SEtoS();
+							straightS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							SEtoS();
+							StoSO();
+							straightSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							SEtoS();
+							StoSO();
+							SOtoO();
+							straightO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							SEtoS();
+							StoSO();
+							SOtoO();
+							OtoNO();
+							straightNO();
+							sentido = 2;
+						break;
+					}
+				break;
+				case 5: //Sur
+					switch(direccion){
+						case 1: //Norte
+							StoSE();
+							SEtoE();
+							EtoNE();
+							NEtoN();
+							straightN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							StoSE();
+							SEtoE();
+							EtoNE();
+							straightNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							StoSE();
+							SEtoE();
+							straightE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							StoSE();
+							straightSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							straightS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							StoSO();
+							straightSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							StoSO();
+							SOtoO();
+							straightO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							StoSO();
+							SOtoO();
+							OtoNO();
+							straightNO();
+							sentido = 2;
+						break;
+					}
+				break;
+				case 6: //Suroeste
+					switch(direccion){
+						case 1: //Norte
+							SOtoS();
+							StoSE();
+							SEtoE();
+							EtoNE();
+							NEtoN();
+							straightN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							SOtoS();
+							StoSE();
+							SEtoE();
+							EtoNE();
+							straightNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							SOtoS();
+							StoSE();
+							SEtoE();
+							straightE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							SOtoS();
+							StoSE();
+							straightSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							SOtoS();
+							straightS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							straightSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							SOtoO();
+							straightO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							SOtoO();
+							OtoNO();
+							straightNO();
+							sentido = 2;
+						break;
+					}
+				break;
+				case 7: //Oeste
+					switch(direccion){
+						case 1: //Norte
+							OtoSO();
+							SOtoS();
+							StoSE();
+							SEtoE();
+							EtoNE();
+							NEtoN();
+							straightN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							OtoSO();
+							SOtoS();
+							StoSE();
+							SEtoE();
+							EtoNE();
+							straightNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							OtoSO();
+							SOtoS();
+							StoSE();
+							SEtoE();
+							straightE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							OtoSO();
+							SOtoS();
+							StoSE();
+							straightSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							OtoSO();
+							SOtoS();
+							straightS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							OtoSO();
+							straightSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							straightO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							OtoNO();
+							straightNO();
+							sentido = 2;
+						break;
+					}
+				break;
+				case 2: //Noroeste
+					switch(direccion){
+						case 1: //Norte
+							NOtoO();
+							OtoSO();
+							SOtoS();
+							StoSE();
+							SEtoE();
+							EtoNE();
+							NEtoN();
+							straightN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							NOtoO();
+							OtoSO();
+							SOtoS();
+							StoSE();
+							SEtoE();
+							EtoNE();
+							straightNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							NOtoO();
+							OtoSO();
+							SOtoS();
+							StoSE();
+							SEtoE();
+							straightE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							NOtoO();
+							OtoSO();
+							SOtoS();
+							StoSE();
+							straightSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							NOtoO();
+							OtoSO();
+							SOtoS();
+							straightS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							NOtoO();
+							OtoSO();
+							straightSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							NOtoO();
+							straightO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							straightNO();
+							sentido = 2;
+						break;
+					}
+				break;
+			}	
+		break;
+		case 2: //Serpenteo
+			switch(sentido){
+				case 1: //Norte
+					switch(direccion){
+						case 1: //Norte
+							snakeN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							NtoNE();
+							snakeNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							NtoNE();
+							NEtoE();
+							snakeE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							NtoNE();
+							NEtoE();
+							EtoSE();
+							snakeSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							NtoNE();
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							snakeS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							NtoNE();
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							StoSO();
+							snakeSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							NtoNE();
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							StoSO();
+							SOtoO();
+							snakeO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							NtoNE();
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							StoSO();
+							SOtoO();
+							OtoNO();
+							snakeNO();
+							sentido = 2;
+						break;
+					}
+				break;
+				case 8: //Noreste
+					switch(direccion){
+						case 1: //Norte
+							NEtoN();
+							snakeN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							snakeNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							NEtoE();
+							snakeE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							NEtoE();
+							EtoSE();
+							snakeSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							snakeS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							StoSO();
+							snakeSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							StoSO();
+							SOtoO();
+							snakeO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							StoSO();
+							SOtoO();
+							OtoNO();
+							snakeNO();
+							sentido = 2;
+						break;
+					}
+				break;
+				case 3: //Este
+					switch(direccion){
+						case 1: //Norte
+							EtoNE();
+							NEtoN();
+							snakeN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							EtoNE();
+							snakeNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							snakeE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							EtoSE();
+							snakeSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							EtoSE();
+							SEtoS();
+							snakeS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							EtoSE();
+							SEtoS();
+							StoSO();
+							snakeSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							EtoSE();
+							SEtoS();
+							StoSO();
+							SOtoO();
+							snakeO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							EtoSE();
+							SEtoS();
+							StoSO();
+							SOtoO();
+							OtoNO();
+							snakeNO();
+							sentido = 2;
+						break;
+					}
+				break;
+				case 4: //Sureste
+					switch(direccion){
+						case 1: //Norte
+							SEtoE();
+							EtoNE();
+							NEtoN();
+							snakeN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							SEtoE();
+							EtoNE();
+							snakeNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							SEtoE();
+							snakeE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							snakeSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							SEtoS();
+							snakeS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							SEtoS();
+							StoSO();
+							snakeSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							SEtoS();
+							StoSO();
+							SOtoO();
+							snakeO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							SEtoS();
+							StoSO();
+							SOtoO();
+							OtoNO();
+							snakeNO();
+							sentido = 2;
+						break;
+					}
+				break;
+				case 5: //Sur
+					switch(direccion){
+						case 1: //Norte
+							StoSE();
+							SEtoE();
+							EtoNE();
+							NEtoN();
+							snakeN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							StoSE();
+							SEtoE();
+							EtoNE();
+							snakeNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							StoSE();
+							SEtoE();
+							snakeE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							StoSE();
+							snakeSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							snakeS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							StoSO();
+							snakeSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							StoSO();
+							SOtoO();
+							snakeO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							StoSO();
+							SOtoO();
+							OtoNO();
+							snakeNO();
+							sentido = 2;
+						break;
+					}
+				break;
+				case 6: //Suroeste
+					switch(direccion){
+						case 1: //Norte
+							SOtoS();
+							StoSE();
+							SEtoE();
+							EtoNE();
+							NEtoN();
+							snakeN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							SOtoS();
+							StoSE();
+							SEtoE();
+							EtoNE();
+							snakeNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							SOtoS();
+							StoSE();
+							SEtoE();
+							snakeE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							SOtoS();
+							StoSE();
+							snakeSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							SOtoS();
+							snakeS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							snakeSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							SOtoO();
+							snakeO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							SOtoO();
+							OtoNO();
+							snakeNO();
+							sentido = 2;
+						break;
+					}
+				break;
+				case 7: //Oeste
+					switch(direccion){
+						case 1: //Norte
+							OtoSO();
+							SOtoS();
+							StoSE();
+							SEtoE();
+							EtoNE();
+							NEtoN();
+							snakeN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							OtoSO();
+							SOtoS();
+							StoSE();
+							SEtoE();
+							EtoNE();
+							snakeNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							OtoSO();
+							SOtoS();
+							StoSE();
+							SEtoE();
+							snakeE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							OtoSO();
+							SOtoS();
+							StoSE();
+							snakeSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							OtoSO();
+							SOtoS();
+							snakeS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							OtoSO();
+							snakeSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							snakeO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							OtoNO();
+							snakeNO();
+							sentido = 2;
+						break;
+					}
+				break;
+				case 2: //Noroeste
+					switch(direccion){
+						case 1: //Norte
+							NOtoO();
+							OtoSO();
+							SOtoS();
+							StoSE();
+							SEtoE();
+							EtoNE();
+							NEtoN();
+							snakeN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							NOtoO();
+							OtoSO();
+							SOtoS();
+							StoSE();
+							SEtoE();
+							EtoNE();
+							snakeNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							NOtoO();
+							OtoSO();
+							SOtoS();
+							StoSE();
+							SEtoE();
+							snakeE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							NOtoO();
+							OtoSO();
+							SOtoS();
+							StoSE();
+							snakeSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							NOtoO();
+							OtoSO();
+							SOtoS();
+							snakeS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							NOtoO();
+							OtoSO();
+							snakeSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							NOtoO();
+							snakeO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							snakeNO();
+							sentido = 2;
+						break;
+					}
+				break;
+			}
+		break;
+	}
+	return;
+}
+
+-------------------------------------------------------------------------------------------
+									animacion.cpp
+#include "gfx.h"
+#include "Gusano.h"
+#include <unistd.h>
+#include <time.h>
+#include <stdlib.h> 
+#include <thread> 
+#include <iostream>
+using namespace std;
+const int WindowsX = 1500;
+const int WindowsY = 700;
+void gusanito(float x,float y, int tamano, int sentido, int direccion, int tipoMovimiento){
+	Gusano a;
+	a.inicializaGusano(sentido,x,y,tamano);
+	while(1){
+		gfx_clear();
+		int direccion = rand() % 8 + 1;
+		a.mueveGusano(direccion,tipoMovimiento);
+		gfx_flush();
+	}
+}
+int main(int argc, char const *argv[]){
+		srand(time(NULL));
+	if (atoi(argv[1]) < 1 || argv[1] == NULL){
+		printf("Debe de ingresar un numero mayor a 0");
+	}else{
+		gfx_open(WindowsX, WindowsY, "Gusanos Animados");
+		gfx_clear_color(255,255,255); //Ponemos un fondo blanco
+		gfx_clear();
+		gfx_color(0,0,0); //Color Negro por default
+		//Hacemos un array de Hilos
+		int cantidad = atoi(argv[1]);
+		thread myThreads[cantidad];
+		float randomX;
+		float randomY;
+		int tamano;
+		int sentido;
+		int direccion;
+		int tipoMovimiento;
+		for (int i = 0; i < cantidad; i++){
+			randomX = rand() % WindowsX + 1;
+			randomY = rand() % WindowsY + 1;
+			tamano = 20;
+			sentido = rand() % 8 + 1;
+			direccion = rand() % 8 + 1;
+			tipoMovimiento = rand() % 2 + 1; //Recto, serpenteo
+			myThreads[i] = std::thread(gusanito, randomX, randomY, tamano, sentido,direccion,tipoMovimiento);
+		}
+		for (int i = 0; i < cantidad; i++){
+	        myThreads[i].join();
+	    }
+	}
+	return 0;
+}
+-------------------------------------------------------------------------------------------
+										gfx.h
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
+#ifndef GFX_H
+#define GFX_H
+
+/* Open a new graphics window. */
+void gfx_open( int width, int height, const char *title );
+
+/* Draw a point at (x,y) */
+void gfx_point( int x, int y );
+
+/* Draw a line from (x1,y1) to (x2,y2) */
+void gfx_line( int x1, int y1, int x2, int y2 );
+
+/* Change the current drawing color. */
+void gfx_color( int red, int green, int blue );
+
+/* Clear the graphics window to the background color. */
+void gfx_clear();
+
+/* Change the current background color. */
+void gfx_clear_color( int red, int green, int blue );
+
+/* Wait for the user to press a key or mouse button. */
+char gfx_wait();
+
+/* Return the X and Y coordinates of the last event. */
+int gfx_xpos();
+int gfx_ypos();
+
+/* Return the X and Y dimensions of the window. */
+int gfx_xsize();
+int gfx_ysize();
+
+/* Check to see if an event is waiting. */
+int gfx_event_waiting();
+
+/* Flush all previous output to the window. */
+void gfx_flush();
+
+#endif
+
+#if defined(__cplusplus)
+}
+#endif
+-------------------------------------------------------------------------------------------
+										gfx.c
+#include <X11/Xlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+
+#include "gfx.h"
+
+/*
+gfx_open creates several X11 objects, and stores them in globals
+for use by the other functions in the library.
+*/
+
+static Display *gfx_display=0;
+static Window  gfx_window;
+static GC      gfx_gc;
+static Colormap gfx_colormap;
+static int      gfx_fast_color_mode = 0;
+
+/* These values are saved by gfx_wait then retrieved later by gfx_xpos and gfx_ypos. */
+
+static int saved_xpos = 0;
+static int saved_ypos = 0;
+
+/* Open a new graphics window. */
+
+void gfx_open( int width, int height, const char *title )
+{
+	XInitThreads();
+
+	gfx_display = XOpenDisplay(0);
+	if(!gfx_display) {
+		fprintf(stderr,"gfx_open: unable to open the graphics window.\n");
+		exit(1);
+	}
+
+	Visual *visual = DefaultVisual(gfx_display,0);
+	if(visual && visual->class==TrueColor) {
+		gfx_fast_color_mode = 1;
+	} else {
+		gfx_fast_color_mode = 0;
+	}
+
+	int blackColor = BlackPixel(gfx_display, DefaultScreen(gfx_display));
+	int whiteColor = WhitePixel(gfx_display, DefaultScreen(gfx_display));
+
+	gfx_window = XCreateSimpleWindow(gfx_display, DefaultRootWindow(gfx_display), 0, 0, width, height, 0, blackColor, blackColor);
+
+	XSetWindowAttributes attr;
+	attr.backing_store = Always;
+
+	XChangeWindowAttributes(gfx_display,gfx_window,CWBackingStore,&attr);
+
+	XStoreName(gfx_display,gfx_window,title);
+
+	XSelectInput(gfx_display, gfx_window, StructureNotifyMask|KeyPressMask|ButtonPressMask);
+
+	XMapWindow(gfx_display,gfx_window);
+
+	gfx_gc = XCreateGC(gfx_display, gfx_window, 0, 0);
+
+	gfx_colormap = DefaultColormap(gfx_display,0);
+
+	XSetForeground(gfx_display, gfx_gc, whiteColor);
+
+	// Wait for the MapNotify event
+
+	for(;;) {
+		XEvent e;
+		XNextEvent(gfx_display, &e);
+		if (e.type == MapNotify)
+			break;
+	}
+}
+
+/* Draw a single point at (x,y) */
+
+void gfx_point( int x, int y )
+{
+	XDrawPoint(gfx_display,gfx_window,gfx_gc,x,y);
+}
+
+/* Draw a line from (x1,y1) to (x2,y2) */
+
+void gfx_line( int x1, int y1, int x2, int y2 )
+{
+	XDrawLine(gfx_display,gfx_window,gfx_gc,x1,y1,x2,y2);
+}
+
+/* Change the current drawing color. */
+
+void gfx_color( int r, int g, int b )
+{
+	XColor color;
+
+	if(gfx_fast_color_mode) {
+		/* If this is a truecolor display, we can just pick the color directly. */
+		color.pixel = ((b&0xff) | ((g&0xff)<<8) | ((r&0xff)<<16) );
+	} else {
+		/* Otherwise, we have to allocate it from the colormap of the display. */
+		color.pixel = 0;
+		color.red = r<<8;
+		color.green = g<<8;
+		color.blue = b<<8;
+		XAllocColor(gfx_display,gfx_colormap,&color);
+	}
+
+	XSetForeground(gfx_display, gfx_gc, color.pixel);
+}
+
+/* Clear the graphics window to the background color. */
+
+void gfx_clear()
+{
+	XClearWindow(gfx_display,gfx_window);
+}
+
+/* Change the current background color. */
+
+void gfx_clear_color( int r, int g, int b )
+{
+	XColor color;
+	color.pixel = 0;
+	color.red = r<<8;
+	color.green = g<<8;
+	color.blue = b<<8;
+	XAllocColor(gfx_display,gfx_colormap,&color);
+
+	XSetWindowAttributes attr;
+	attr.background_pixel = color.pixel;
+	XChangeWindowAttributes(gfx_display,gfx_window,CWBackPixel,&attr);
+}
+
+int gfx_event_waiting()
+{
+       XEvent event;
+
+       gfx_flush();
+
+       while (1) {
+               if(XCheckMaskEvent(gfx_display,-1,&event)) {
+                       if(event.type==KeyPress) {
+                               XPutBackEvent(gfx_display,&event);
+                               return 1;
+                       } else if (event.type==ButtonPress) {
+                               XPutBackEvent(gfx_display,&event);
+                               return 1;
+                       } else {
+                               return 0;
+                       }
+               } else {
+                       return 0;
+               }
+       }
+}
+
+/* Wait for the user to press a key or mouse button. */
+
+char gfx_wait()
+{
+	XEvent event;
+
+	gfx_flush();
+
+	while(1) {
+		XNextEvent(gfx_display,&event);
+
+		if(event.type==KeyPress) {
+			saved_xpos = event.xkey.x;
+			saved_ypos = event.xkey.y;
+			return XLookupKeysym(&event.xkey,0);
+		} else if(event.type==ButtonPress) {
+			saved_xpos = event.xkey.x;
+			saved_ypos = event.xkey.y;
+			return event.xbutton.button;
+		}
+	}
+}
+
+/* Return the X and Y coordinates of the last event. */
+
+int gfx_xpos()
+{
+	return saved_xpos;
+}
+
+int gfx_ypos()
+{
+	return saved_ypos;
+}
+
+/* Flush all previous output to the window. */
+
+void gfx_flush()
+{
+	XFlush(gfx_display);
+}
+-------------------------------------------------------------------------------------------										Makefile para Mac (Tener instalado XCODE y XQUARTZ)
+
+animacion: animacion.o Gusano.o gfx.o
+	g++ gfx.o animacion.o Gusano.o -o animacion -I/usr/X11R6/include -L/usr/X11R6/lib -lX11 -lm
+animacion.o: animacion.cpp Gusano.o gfx.o
+	g++ -std=c++11 animacion.cpp -c -lpthread
+Gusano.o: Gusano.cpp gfx.o Gusano.h
+	g++ Gusano.cpp -c
+gfx.o: gfx.c gfx.h
+	gcc gfx.c -c -I/usr/X11R6/include -L/usr/X11R6/lib -lX11 -lm
+
+-------------------------------------------------------------------------------------------										Makefile para Linux (Tener la libreria X11-dev)
+animacion: animacion.o Gusano.o gfx.o
+	g++ gfx.o animacion.o Gusano.o -o animacion -lX11 -lm
+animacion.o: animacion.cpp Gusano.o gfx.o
+	g++ -std=c++11 animacion.cpp -c -lpthread
+Gusano.o: Gusano.cpp gfx.o Gusano.h
+	g++ Gusano.cpp -c
+gfx.o: gfx.c gfx.h
+	gcc gfx.c -c 

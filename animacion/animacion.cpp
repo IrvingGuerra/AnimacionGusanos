@@ -49,6 +49,5 @@ int main(int argc, char const *argv[]){
 	        myThreads[i].join();
 	    }
 	}
-
 	return 0;
 }
