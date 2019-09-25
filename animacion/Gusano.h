@@ -11,12 +11,12 @@ private:
 	float inicialY;
 	int tamano;
 
-	float saveX1[10];
-	float saveY1[10];
-	float saveX2[10];
-	float saveY2[10];
+	float saveX1[20];
+	float saveY1[20];
+	float saveX2[20];
+	float saveY2[20];
 public:
-	Gusano(int = 1,float = 100, float = 100, int = 10);
+	Gusano(int = 1,float = 100, float = 100, int = 20);
 	void inicializaGusano(int, float, float, int);
 	void imprimeGusanoColor();
 	void imprimeGusanoBlanco();
@@ -53,6 +53,18 @@ public:
 	void straightSO();
 	void straightO();
 	void straightNO();
+
+	//Serpenteo
+
+	void snakeN();
+	void snakeNE();
+	void snakeE();
+	void snakeSE();
+	void snakeS();
+	void snakeSO();
+	void snakeO();
+	void snakeNO();
+
 
 };
 #endif

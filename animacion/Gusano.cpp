@@ -5,7 +5,7 @@
 #include <iostream>
 using namespace std;
 
-const int TIEMPO = 30000;
+const int TIEMPO = 3000;
 
 Gusano::Gusano(int s,float x, float y, int tam) : sentido(s),inicialX(x), inicialY(y), tamano(tam){}
 
@@ -63,9 +63,15 @@ void Gusano::inicializaGusano(int s,float x, float y, int tam){
 	return;
 }
 void Gusano::imprimeGusanoColor(){
+	gfx_color(0,0,0); //Color negro
 	for (int i = 0; i < tamano; ++i){
 		gfx_line(saveX1[i],saveY1[i],saveX2[i],saveY2[i]);
 	}
+	gfx_flush();
+	usleep(TIEMPO);
+
+	imprimeGusanoBlanco();
+
 	return;
 }
 
@@ -74,12 +80,9 @@ void Gusano::imprimeGusanoBlanco(){
 	for (int i = 0; i < tamano; ++i){
 		gfx_line(saveX1[i],saveY1[i],saveX2[i],saveY2[i]);
 	}
-	gfx_color(0,0,0);
+	gfx_flush();
 	return;
 }
-
-
-
 
 //Vueltas a la derecha
 void Gusano::NtoNE(){
@@ -96,10 +99,9 @@ void Gusano::NtoNE(){
 			saveX2[0] = saveX2[0]+decimal;
 			saveY1[0] = saveY1[0]-1+decimal;
 			saveY2[0] = saveY1[0]-1+decimal;
-			imprimeGusanoColor();
-			gfx_flush();
-	 		usleep(TIEMPO);
-	 		imprimeGusanoBlanco();
+			imprimeGusanoColor();			
+	 		//imprimeGusanoBlanco();
+	 		
 		}	
 	}
 }
@@ -117,10 +119,8 @@ void Gusano::NEtoE(){
 			saveX2[0] = saveX2[0]+decimal;
 			saveY1[0] = saveY1[0]-1+decimal;
 			saveY2[0] = saveY1[0]-1+decimal;
-			imprimeGusanoColor();
-			gfx_flush();
-	 		usleep(TIEMPO);
-	 		imprimeGusanoBlanco();
+			imprimeGusanoColor();			
+	 		//imprimeGusanoBlanco();
 		}	
 	}
 }
@@ -139,10 +139,9 @@ void Gusano::EtoSE(){
 			saveX2[0] = saveX2[0]+1-decimal;
 			saveY1[0] = saveY1[0]+decimal;
 			saveY2[0] = saveY1[0]+decimal;
-			imprimeGusanoColor();
-			gfx_flush();
-	 		usleep(TIEMPO);
-	 		imprimeGusanoBlanco();
+			imprimeGusanoColor();			
+	 		//imprimeGusanoBlanco();
+	 		
 		}	
 	}
 }
@@ -161,10 +160,9 @@ void Gusano::SEtoS(){
 			saveX2[0] = saveX2[0]+1-decimal;
 			saveY1[0] = saveY1[0]+decimal;
 			saveY2[0] = saveY1[0]+decimal;
-			imprimeGusanoColor();
-			gfx_flush();
-	 		usleep(TIEMPO);
-	 		imprimeGusanoBlanco();
+			imprimeGusanoColor();			
+	 		//imprimeGusanoBlanco();
+	 		
 		}	
 	}
 }
@@ -182,10 +180,9 @@ void Gusano::StoSO(){
 			saveX2[0] = saveX2[0]-decimal;
 			saveY1[0] = saveY1[0]+1-decimal;
 			saveY2[0] = saveY1[0]+1-decimal;
-			imprimeGusanoColor();
-			gfx_flush();
-	 		usleep(TIEMPO);
-	 		imprimeGusanoBlanco();
+			imprimeGusanoColor();			
+	 		//imprimeGusanoBlanco();
+	 		
 		}	
 	}
 }
@@ -203,10 +200,9 @@ void Gusano::SOtoO(){
 			saveX2[0] = saveX2[0]-decimal;
 			saveY1[0] = saveY1[0]+1-decimal;
 			saveY2[0] = saveY1[0]+1-decimal;
-			imprimeGusanoColor();
-			gfx_flush();
-	 		usleep(TIEMPO);
-	 		imprimeGusanoBlanco();
+			imprimeGusanoColor();			
+	 		//imprimeGusanoBlanco();
+	 		
 		}	
 	}
 }
@@ -224,10 +220,9 @@ void Gusano::OtoNO(){
 			saveX2[0] = saveX2[0]-1+decimal;
 			saveY1[0] = saveY1[0]-decimal;
 			saveY2[0] = saveY1[0]-decimal;
-			imprimeGusanoColor();
-			gfx_flush();
-	 		usleep(TIEMPO);
-	 		imprimeGusanoBlanco();
+			imprimeGusanoColor();			
+	 		//imprimeGusanoBlanco();
+	 		
 		}	
 	}
 }
@@ -245,10 +240,9 @@ void Gusano::NOtoN(){
 			saveX2[0] = saveX2[0]-1+decimal;
 			saveY1[0] = saveY1[0]-decimal;
 			saveY2[0] = saveY1[0]-decimal;
-			imprimeGusanoColor();
-			gfx_flush();
-	 		usleep(TIEMPO);
-	 		imprimeGusanoBlanco();
+			imprimeGusanoColor();			
+	 		//imprimeGusanoBlanco();
+	 		
 		}	
 	}
 }
@@ -263,10 +257,9 @@ void Gusano::straightN(){
 		}
 		saveY1[0]--;
 		saveY2[0]--;
-		imprimeGusanoColor();
-		gfx_flush();
- 		usleep(TIEMPO);
- 		imprimeGusanoBlanco(); //24 por segundo
+		imprimeGusanoColor();	
+ 		//imprimeGusanoBlanco();
+ 		 //24 por segundo
 	}
 }
 void Gusano::straightNE(){
@@ -281,10 +274,9 @@ void Gusano::straightNE(){
 		saveX2[0]++;
 		saveY1[0]--;
 		saveY2[0]--;
-		imprimeGusanoColor();
-		gfx_flush();
- 		usleep(TIEMPO);
- 		imprimeGusanoBlanco(); //24 por segundo
+		imprimeGusanoColor();	
+ 		//imprimeGusanoBlanco();
+ 		 //24 por segundo
 	}
 }
 void Gusano::straightE(){
@@ -297,10 +289,9 @@ void Gusano::straightE(){
 		}
 		saveX1[0]++;
 		saveX2[0]++;
-		imprimeGusanoColor();
-		gfx_flush();
- 		usleep(TIEMPO);
- 		imprimeGusanoBlanco(); //24 por segundo
+		imprimeGusanoColor();	
+ 		//imprimeGusanoBlanco();
+ 		 //24 por segundo
 		}
 }
 void Gusano::straightSE(){
@@ -315,10 +306,9 @@ void Gusano::straightSE(){
 		saveX2[0]++;
 		saveY1[0]++;
 		saveY2[0]++;
-		imprimeGusanoColor();
-		gfx_flush();
- 		usleep(TIEMPO);
- 		imprimeGusanoBlanco(); //24 por segundo
+		imprimeGusanoColor();	
+ 		//imprimeGusanoBlanco();
+ 		 //24 por segundo
 		}
 }
 void Gusano::straightS(){
@@ -331,10 +321,9 @@ void Gusano::straightS(){
 		}
 		saveY1[0]++;
 		saveY2[0]++;
-		imprimeGusanoColor();
-		gfx_flush();
- 		usleep(TIEMPO);
- 		imprimeGusanoBlanco(); //24 por segundo
+		imprimeGusanoColor();	
+ 		//imprimeGusanoBlanco();
+ 		 //24 por segundo
 	}
 }
 void Gusano::straightSO(){
@@ -349,10 +338,9 @@ void Gusano::straightSO(){
 		saveX2[0]--;
 		saveY1[0]++;
 		saveY2[0]++;
-		imprimeGusanoColor();
-		gfx_flush();
- 		usleep(TIEMPO);
- 		imprimeGusanoBlanco(); //24 por segundo
+		imprimeGusanoColor();	
+ 		//imprimeGusanoBlanco();
+ 		 //24 por segundo
 	}
 }
 void Gusano::straightO(){
@@ -365,10 +353,9 @@ void Gusano::straightO(){
 		}
 		saveX1[0]--;
 		saveX2[0]--;
-		imprimeGusanoColor();
-		gfx_flush();
- 		usleep(TIEMPO);
- 		imprimeGusanoBlanco(); //24 por segundo
+		imprimeGusanoColor();	
+ 		//imprimeGusanoBlanco();
+ 		 //24 por segundo
 	}
 }
 void Gusano::straightNO(){
@@ -383,12 +370,112 @@ void Gusano::straightNO(){
 		saveX2[0]--;
 		saveY1[0]--;
 		saveY2[0]--;
-		imprimeGusanoColor();
-		gfx_flush();
- 		usleep(TIEMPO);
- 		imprimeGusanoBlanco(); //24 por segundo
+		imprimeGusanoColor();	
+ 		//imprimeGusanoBlanco();
+ 		 //24 por segundo
 	}
 }
+
+
+//Serpenteo
+
+void Gusano::snakeN(){
+	NtoNE();
+	NEtoN();
+	NtoNO();
+	NOtoN();
+	NtoNE();
+	NEtoN();
+	NtoNO();
+	NOtoN();
+	NtoNE();
+	NEtoN();
+	NtoNO();
+	NOtoN();
+	NtoNE();
+	NEtoN();
+	NtoNO();
+	NOtoN();
+}
+void Gusano::snakeNE(){
+	NtoNE();
+	NEtoN();
+	NtoNE();
+	NEtoN();
+	NtoNE();
+	NEtoN();
+	NtoNE();
+	NEtoN();
+	NtoNE();
+	NEtoN();
+}
+void Gusano::snakeE(){
+	EtoSE();
+	SEtoE();
+	EtoNE();
+	NEtoE();
+	EtoSE();
+	SEtoE();
+	EtoNE();
+	NEtoE();
+}
+void Gusano::snakeSE(){
+	EtoSE();
+	SEtoE();
+	EtoSE();
+	SEtoE();
+	EtoSE();
+	SEtoE();
+	EtoSE();
+	SEtoE();
+	EtoSE();
+	SEtoE();
+}
+void Gusano::snakeS(){
+	StoSE();
+	SEtoS();
+	StoSO();
+	SOtoS();
+	StoSE();
+	SEtoS();
+	StoSO();
+	SOtoS();
+}
+void Gusano::snakeSO(){
+	StoSO();
+	SOtoS();
+	StoSO();
+	SOtoS();
+	StoSO();
+	SOtoS();
+	StoSO();
+	SOtoS();
+	StoSO();
+	SOtoS();
+}
+void Gusano::snakeO(){
+	OtoNO();
+	NOtoO();
+	OtoSO();
+	SOtoO();
+	OtoNO();
+	NOtoO();
+	OtoSO();
+	SOtoO();
+}
+void Gusano::snakeNO(){
+	OtoNO();
+	NOtoO();
+	OtoNO();
+	NOtoO();
+	OtoNO();
+	NOtoO();
+	OtoNO();
+	NOtoO();
+	OtoNO();
+	NOtoO();
+}
+
 
 //Vueltas a la izquierda
 void Gusano::NtoNO(){
@@ -405,10 +492,9 @@ void Gusano::NtoNO(){
 			saveX2[0] = saveX2[0]-decimal;
 			saveY1[0] = saveY1[0]-1+decimal;
 			saveY2[0] = saveY1[0]-1+decimal;
-			imprimeGusanoColor();
-			gfx_flush();
-	 		usleep(TIEMPO);
-	 		imprimeGusanoBlanco();
+			imprimeGusanoColor();			
+	 		//imprimeGusanoBlanco();
+	 		
 		}	
 	}
 }
@@ -426,10 +512,9 @@ void Gusano::NOtoO(){
 			saveX2[0] = saveX2[0]-decimal;
 			saveY1[0] = saveY1[0]-1+decimal;
 			saveY2[0] = saveY1[0]-1+decimal;
-			imprimeGusanoColor();
-			gfx_flush();
-	 		usleep(TIEMPO);
-	 		imprimeGusanoBlanco();
+			imprimeGusanoColor();			
+	 		//imprimeGusanoBlanco();
+	 		
 		}	
 	}
 }
@@ -448,10 +533,9 @@ void Gusano::OtoSO(){
 			saveX2[0] = saveX2[0]-1+decimal;
 			saveY1[0] = saveY1[0]+decimal;
 			saveY2[0] = saveY1[0]+decimal;
-			imprimeGusanoColor();
-			gfx_flush();
-	 		usleep(TIEMPO);
-	 		imprimeGusanoBlanco();
+			imprimeGusanoColor();			
+	 		//imprimeGusanoBlanco();
+	 		
 		}	
 	}
 }
@@ -470,10 +554,9 @@ void Gusano::SOtoS(){
 			saveX2[0] = saveX2[0]-1+decimal;
 			saveY1[0] = saveY1[0]+decimal;
 			saveY2[0] = saveY1[0]+decimal;
-			imprimeGusanoColor();
-			gfx_flush();
-	 		usleep(TIEMPO);
-	 		imprimeGusanoBlanco();
+			imprimeGusanoColor();			
+	 		//imprimeGusanoBlanco();
+	 		
 		}	
 	}
 }
@@ -491,10 +574,9 @@ void Gusano::StoSE(){
 			saveX2[0] = saveX2[0]+decimal;
 			saveY1[0] = saveY1[0]+1-decimal;
 			saveY2[0] = saveY1[0]+1-decimal;
-			imprimeGusanoColor();
-			gfx_flush();
-	 		usleep(TIEMPO);
-	 		imprimeGusanoBlanco();
+			imprimeGusanoColor();			
+	 		//imprimeGusanoBlanco();
+	 		
 		}	
 	}
 }
@@ -512,10 +594,9 @@ void Gusano::SEtoE(){
 			saveX2[0] = saveX2[0]+decimal;
 			saveY1[0] = saveY1[0]+1-decimal;
 			saveY2[0] = saveY1[0]+1-decimal;
-			imprimeGusanoColor();
-			gfx_flush();
-	 		usleep(TIEMPO);
-	 		imprimeGusanoBlanco();
+			imprimeGusanoColor();			
+	 		//imprimeGusanoBlanco();
+	 		
 		}	
 	}
 }
@@ -533,10 +614,9 @@ void Gusano::EtoNE(){
 			saveX2[0] = saveX2[0]+1-decimal;
 			saveY1[0] = saveY1[0]-decimal;
 			saveY2[0] = saveY1[0]-decimal;
-			imprimeGusanoColor();
-			gfx_flush();
-	 		usleep(TIEMPO);
-	 		imprimeGusanoBlanco();
+			imprimeGusanoColor();			
+	 		//imprimeGusanoBlanco();
+	 		
 		}	
 	}
 }
@@ -554,10 +634,9 @@ void Gusano::NEtoN(){
 			saveX2[0] = saveX2[0]+1-decimal;
 			saveY1[0] = saveY1[0]-decimal;
 			saveY2[0] = saveY1[0]-decimal;
-			imprimeGusanoColor();
-			gfx_flush();
-	 		usleep(TIEMPO);
-	 		imprimeGusanoBlanco();
+			imprimeGusanoColor();			
+	 		//imprimeGusanoBlanco();
+	 		
 		}	
 	}
 }
@@ -1035,7 +1114,464 @@ void Gusano::mueveGusano(int d, int tipo){
 			}	
 		break;
 		case 2: //Serpenteo
-			
+			switch(sentido){
+				case 1: //Norte
+					switch(direccion){
+						case 1: //Norte
+							snakeN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							NtoNE();
+							snakeNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							NtoNE();
+							NEtoE();
+							snakeE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							NtoNE();
+							NEtoE();
+							EtoSE();
+							snakeSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							NtoNE();
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							snakeS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							NtoNE();
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							StoSO();
+							snakeSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							NtoNE();
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							StoSO();
+							SOtoO();
+							snakeO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							NtoNE();
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							StoSO();
+							SOtoO();
+							OtoNO();
+							snakeNO();
+							sentido = 2;
+						break;
+					}
+				break;
+				case 8: //Noreste
+					switch(direccion){
+						case 1: //Norte
+							NEtoN();
+							snakeN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							snakeNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							NEtoE();
+							snakeE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							NEtoE();
+							EtoSE();
+							snakeSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							snakeS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							StoSO();
+							snakeSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							StoSO();
+							SOtoO();
+							snakeO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							NEtoE();
+							EtoSE();
+							SEtoS();
+							StoSO();
+							SOtoO();
+							OtoNO();
+							snakeNO();
+							sentido = 2;
+						break;
+					}
+				break;
+				case 3: //Este
+					switch(direccion){
+						case 1: //Norte
+							EtoNE();
+							NEtoN();
+							snakeN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							EtoNE();
+							snakeNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							snakeE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							EtoSE();
+							snakeSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							EtoSE();
+							SEtoS();
+							snakeS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							EtoSE();
+							SEtoS();
+							StoSO();
+							snakeSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							EtoSE();
+							SEtoS();
+							StoSO();
+							SOtoO();
+							snakeO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							EtoSE();
+							SEtoS();
+							StoSO();
+							SOtoO();
+							OtoNO();
+							snakeNO();
+							sentido = 2;
+						break;
+					}
+				break;
+				case 4: //Sureste
+					switch(direccion){
+						case 1: //Norte
+							SEtoE();
+							EtoNE();
+							NEtoN();
+							snakeN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							SEtoE();
+							EtoNE();
+							snakeNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							SEtoE();
+							snakeE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							snakeSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							SEtoS();
+							snakeS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							SEtoS();
+							StoSO();
+							snakeSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							SEtoS();
+							StoSO();
+							SOtoO();
+							snakeO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							SEtoS();
+							StoSO();
+							SOtoO();
+							OtoNO();
+							snakeNO();
+							sentido = 2;
+						break;
+					}
+				break;
+				case 5: //Sur
+					switch(direccion){
+						case 1: //Norte
+							StoSE();
+							SEtoE();
+							EtoNE();
+							NEtoN();
+							snakeN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							StoSE();
+							SEtoE();
+							EtoNE();
+							snakeNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							StoSE();
+							SEtoE();
+							snakeE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							StoSE();
+							snakeSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							snakeS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							StoSO();
+							snakeSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							StoSO();
+							SOtoO();
+							snakeO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							StoSO();
+							SOtoO();
+							OtoNO();
+							snakeNO();
+							sentido = 2;
+						break;
+					}
+				break;
+				case 6: //Suroeste
+					switch(direccion){
+						case 1: //Norte
+							SOtoS();
+							StoSE();
+							SEtoE();
+							EtoNE();
+							NEtoN();
+							snakeN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							SOtoS();
+							StoSE();
+							SEtoE();
+							EtoNE();
+							snakeNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							SOtoS();
+							StoSE();
+							SEtoE();
+							snakeE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							SOtoS();
+							StoSE();
+							snakeSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							SOtoS();
+							snakeS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							snakeSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							SOtoO();
+							snakeO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							SOtoO();
+							OtoNO();
+							snakeNO();
+							sentido = 2;
+						break;
+					}
+				break;
+				case 7: //Oeste
+					switch(direccion){
+						case 1: //Norte
+							OtoSO();
+							SOtoS();
+							StoSE();
+							SEtoE();
+							EtoNE();
+							NEtoN();
+							snakeN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							OtoSO();
+							SOtoS();
+							StoSE();
+							SEtoE();
+							EtoNE();
+							snakeNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							OtoSO();
+							SOtoS();
+							StoSE();
+							SEtoE();
+							snakeE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							OtoSO();
+							SOtoS();
+							StoSE();
+							snakeSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							OtoSO();
+							SOtoS();
+							snakeS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							OtoSO();
+							snakeSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							snakeO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							OtoNO();
+							snakeNO();
+							sentido = 2;
+						break;
+					}
+				break;
+				case 2: //Noroeste
+					switch(direccion){
+						case 1: //Norte
+							NOtoO();
+							OtoSO();
+							SOtoS();
+							StoSE();
+							SEtoE();
+							EtoNE();
+							NEtoN();
+							snakeN();
+							sentido = 1;
+						break;
+						case 2: //Noreste
+							NOtoO();
+							OtoSO();
+							SOtoS();
+							StoSE();
+							SEtoE();
+							EtoNE();
+							snakeNE();
+							sentido = 8;
+						break;
+						case 3: //Este
+							NOtoO();
+							OtoSO();
+							SOtoS();
+							StoSE();
+							SEtoE();
+							snakeE();
+							sentido = 3;
+						break;
+						case 4: //Sureste
+							NOtoO();
+							OtoSO();
+							SOtoS();
+							StoSE();
+							snakeSE();
+							sentido = 4;
+						break;
+						case 5: //Sur
+							NOtoO();
+							OtoSO();
+							SOtoS();
+							snakeS();
+							sentido = 5;
+						break;
+						case 6: //Suroeste
+							NOtoO();
+							OtoSO();
+							snakeSO();
+							sentido = 6;
+						break;
+						case 7: //Oeste
+							NOtoO();
+							snakeO();
+							sentido = 7;
+						break;
+						case 8: //Noroeste
+							snakeNO();
+							sentido = 2;
+						break;
+					}
+				break;
+			}
 		break;
 	}
 	return;

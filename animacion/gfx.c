@@ -34,6 +34,8 @@ static int saved_ypos = 0;
 
 void gfx_open( int width, int height, const char *title )
 {
+	XInitThreads();
+
 	gfx_display = XOpenDisplay(0);
 	if(!gfx_display) {
 		fprintf(stderr,"gfx_open: unable to open the graphics window.\n");
