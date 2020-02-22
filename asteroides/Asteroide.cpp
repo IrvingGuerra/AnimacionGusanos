@@ -67,6 +67,7 @@ void Asteroide::imprimeAsteroideColor(){
 	}
 	gfx_flush();
 	usleep(TIEMPO);
+	imprimeAsteroideNegro();
 	return;
 }
 
