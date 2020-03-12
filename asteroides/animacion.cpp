@@ -14,9 +14,9 @@ void asteroide(float x,float y, int size,int direccion, int eje){
 	a.inicializaAsteroide(x, y, size);
 	//a.imprimeAsteroideColor();
 	while(1){
-		//gfx_clear();
 		a.mueveAsteroide(direccion,eje);
 		gfx_flush();
+		//gfx_clear();
 	}
 }
 
